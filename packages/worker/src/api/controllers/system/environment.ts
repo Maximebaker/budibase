@@ -1,7 +1,6 @@
 import { env as coreEnv, db as dbCore } from "@budibase/backend-core"
 import { helpers } from "@budibase/shared-core"
 import { Ctx, GetEnvironmentResponse, MaintenanceType } from "@budibase/types"
-import nodeFetch from "node-fetch"
 import env from "../../../environment"
 
 let sqsAvailable: boolean
@@ -20,7 +19,13 @@ async function isSqsAvailable() {
     }
     await helpers.retry(
       async () => {
-        await nodeFetch(url, { timeout: 2000 })
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 2000)
+        try {
+          await fetch(url, { signal: controller.signal })
+        } finally {
+          clearTimeout(timeout)
+        }
       },
       { times: 3 }
     )
@@ -38,7 +43,7 @@ async function isSqsMissing() {
   return !(await isSqsAvailable())
 }
 
-export const fetch = async (ctx: Ctx<void, GetEnvironmentResponse>) => {
+export const fetchAll = async (ctx: Ctx<void, GetEnvironmentResponse>) => {
   ctx.body = {
     multiTenancy: !!env.MULTI_TENANCY,
     offlineMode: !!coreEnv.OFFLINE_MODE,

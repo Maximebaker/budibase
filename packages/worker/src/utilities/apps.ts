@@ -1,4 +1,3 @@
-import fetch from "node-fetch"
 import { constants } from "@budibase/backend-core"
 import env from "../environment"
 import { checkSlashesInUrl } from "./"

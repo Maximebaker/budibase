@@ -9,7 +9,6 @@ import {
 } from "../../../../tests/utils/oidc"
 import { ConfigType, OIDCInnerConfig, PKCEMethod } from "@budibase/types"
 import { middleware } from "@budibase/backend-core"
-import fetch from "node-fetch"
 import { generator, mocks } from "@budibase/backend-core/tests"
 
 mocks.licenses.usePkceOidc()

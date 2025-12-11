@@ -2,7 +2,6 @@ import { GenericContainer, Wait } from "testcontainers"
 import { testContainerUtils } from "@budibase/backend-core/tests"
 import { OIDCInnerConfig, PKCEMethod } from "@budibase/types"
 import { generator } from "@budibase/backend-core/tests"
-import fetch from "node-fetch"
 import * as crypto from "crypto"
 
 const DEX_IMAGE = "dexidp/dex:v2.37.0"

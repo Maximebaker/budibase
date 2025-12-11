@@ -1,5 +1,3 @@
-const fetch = require("node-fetch")
-
 const MAX_RUNTIME_SEC = 600
 const HOST = "http://localhost:10000"
 const TENANT_ID = "default"
