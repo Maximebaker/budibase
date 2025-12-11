@@ -1,4 +1,3 @@
-import fetch from "node-fetch"
 import { getFetchResponse } from "./utils"
 import { ZapierStepInputs, ZapierStepOutputs } from "@budibase/types"
 

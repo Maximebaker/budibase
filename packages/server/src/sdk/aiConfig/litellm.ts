@@ -1,5 +1,4 @@
 import { configs, context, HTTPError } from "@budibase/backend-core"
-import fetch from "node-fetch"
 import sdk from ".."
 import env from "../../environment"
 

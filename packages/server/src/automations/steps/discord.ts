@@ -1,4 +1,3 @@
-import fetch from "node-fetch"
 import { getFetchResponse } from "./utils"
 import { ExternalAppStepOutputs, DiscordStepInputs } from "@budibase/types"
 

@@ -1,8 +1,7 @@
 import type { Headers as UndiciHeaders } from "undici"
-import type { Headers as NodeFetchHeaders } from "node-fetch"
 
 export function getAttachmentHeaders(
-  headers: UndiciHeaders | NodeFetchHeaders,
+  headers: UndiciHeaders | Headers,
   opts?: { downloadImages?: boolean }
 ) {
   const contentType = headers.get("content-type") || ""

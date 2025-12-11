@@ -5,7 +5,6 @@ import {
   GetVersionResponse,
   RevertWorkspaceResponse,
 } from "@budibase/types"
-import fetch from "node-fetch"
 import env from "../../environment"
 import sdk from "../../sdk"
 import { checkSlashesInUrl } from "../../utilities"

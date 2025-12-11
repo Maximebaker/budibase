@@ -1,5 +1,4 @@
 import { getPluginMetadata } from "../../../utilities/fileSystem"
-import fetch from "node-fetch"
 import { downloadUnzipTarball } from "./utils"
 
 export async function request(

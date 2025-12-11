@@ -5,7 +5,6 @@ import {
   OAuth2GrantType,
 } from "@budibase/types"
 import { HttpError } from "koa"
-import fetch, { RequestInit } from "node-fetch"
 import { get } from "."
 import { processEnvironmentVariable } from "../../utils"
 

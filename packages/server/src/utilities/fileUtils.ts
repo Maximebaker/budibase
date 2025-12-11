@@ -1,7 +1,7 @@
 import fs from "fs"
-import fetch from "node-fetch"
 import path from "path"
-import { pipeline } from "stream"
+import { pipeline, Readable } from "node:stream"
+import { ReadableStream as NodeReadableStream } from "node:stream/web"
 import { promisify } from "util"
 import * as uuid from "uuid"
 
@@ -27,7 +27,14 @@ export async function uploadUrl(url: string): Promise<Upload | undefined> {
     const destination = path.resolve(getTmpPath(), `${uuid.v4()}${extension}`)
     const fileStream = fs.createWriteStream(destination, { flags: "wx" })
 
-    await promisify(pipeline)(res.body, fileStream)
+    const body = res.body
+    if (!body) {
+      throw new Error("Failed to download file: empty response body")
+    }
+    const nodeStream = Readable.fromWeb(
+      body as unknown as NodeReadableStream<Uint8Array>
+    )
+    await promisify(pipeline)(nodeStream, fileStream)
 
     const processedFileName = path.basename(destination)
 

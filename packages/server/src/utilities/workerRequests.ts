@@ -13,7 +13,6 @@ import {
   SendEmailResponse,
   User,
 } from "@budibase/types"
-import { Response, default as fetch, type RequestInit } from "node-fetch"
 import env from "../environment"
 import { checkSlashesInUrl } from "./index"
 

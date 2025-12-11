@@ -1,5 +1,4 @@
 import { ContextEmitter } from "@budibase/types"
-import { Response } from "node-fetch"
 
 export function hasNullFilters(filters: any[] = []) {
   return (

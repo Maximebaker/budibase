@@ -1,4 +1,3 @@
-import fetch, { HeadersInit } from "node-fetch"
 import { getFetchResponse } from "./utils"
 import {
   HttpMethod,
@@ -34,7 +33,7 @@ export async function run({
   let response
   let request: {
     method: string
-    headers: HeadersInit
+    headers: RequestInit["headers"]
     body?: string
   } = {
     method: method || HttpMethod.GET,

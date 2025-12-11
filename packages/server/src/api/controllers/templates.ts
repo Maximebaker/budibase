@@ -1,4 +1,3 @@
-import nodeFetch from "node-fetch"
 import { downloadTemplate as dlTemplate } from "../../utilities/fileSystem"
 import env from "../../environment"
 import {
@@ -11,14 +10,14 @@ import {
 const DEFAULT_TEMPLATES_BUCKET =
   "prod-budi-templates.s3-eu-west-1.amazonaws.com"
 
-export async function fetch(ctx: UserCtx<void, FetchGlobalTemplateResponse>) {
+export async function fetchAll(
+  ctx: UserCtx<void, FetchGlobalTemplateResponse>
+) {
   let type = env.TEMPLATE_REPOSITORY
   let response,
     error = false
   try {
-    response = await nodeFetch(
-      `https://${DEFAULT_TEMPLATES_BUCKET}/manifest.json`
-    )
+    response = await fetch(`https://${DEFAULT_TEMPLATES_BUCKET}/manifest.json`)
     if (response.status !== 200) {
       error = true
     }

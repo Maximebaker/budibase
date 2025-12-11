@@ -24,7 +24,6 @@ import {
 import tracer from "dd-trace"
 import { OAuth2Client } from "google-auth-library"
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet"
-import fetch from "node-fetch"
 import { GOOGLE_SHEETS_PRIMARY_KEY } from "../constants"
 import {
   buildExternalTableId,

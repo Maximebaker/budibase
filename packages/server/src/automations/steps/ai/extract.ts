@@ -5,8 +5,8 @@ import {
   ExtractFileDataStepInputs,
   ExtractFileDataStepOutputs,
 } from "@budibase/types"
-import fetch from "node-fetch"
-import { Readable } from "stream"
+import { Readable } from "node:stream"
+import { ReadableStream } from "node:stream/web"
 import * as automationUtils from "../../automationUtils"
 
 async function processUrlFile(
@@ -18,7 +18,11 @@ async function processUrlFile(
   if (!response.ok) {
     throw new Error(`Failed to fetch file from URL: ${response.statusText}`)
   }
-  const stream = response.body as Readable
+  const { body } = response
+  if (!body) {
+    throw new Error("Failed to fetch file from URL: empty response body")
+  }
+  const stream = Readable.fromWeb(body as unknown as ReadableStream<Uint8Array>)
   const contentType = response.headers.get("content-type") || fileType
   const filename = `document.${fileType}`
   return await llm.uploadFile(stream, filename, contentType)

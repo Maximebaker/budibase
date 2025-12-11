@@ -1,4 +1,3 @@
-const fetch = require("node-fetch")
 const uuid = require("uuid/v4")
 
 const URL_APP = "http://localhost:10000/api/public/v1/applications"
