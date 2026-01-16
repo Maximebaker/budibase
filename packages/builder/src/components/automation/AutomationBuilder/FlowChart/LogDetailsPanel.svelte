@@ -2,6 +2,7 @@
   import { Body, Icon, ActionButton, Divider } from "@budibase/bbui"
   import Panel from "@/components/design/Panel.svelte"
   import JSONViewer from "@/components/common/JSONViewer.svelte"
+  import AgentOutputViewer from "@/components/automation/SetupPanel/AgentOutputViewer.svelte"
   import dayjs from "dayjs"
   import StatusRenderer from "@/settings/pages/backups/_components/StatusRenderer.svelte"
   import {
@@ -19,9 +20,15 @@
   $: hasInputData =
     currentStepData?.inputs && Object.keys(currentStepData.inputs).length > 0
   $: isBranchStep = selectedStep?.stepId === "BRANCH"
+  $: isAgentStep = selectedStep?.stepId === "AGENT"
   $: availableTabs = isBranchStep
     ? ["Branch Info"]
-    : ["Data in", "Data out", "Issues"]
+    : [
+        "Data in",
+        "Data out",
+        ...(isAgentStep ? ["Agent"] : []),
+        "Issues",
+      ]
 
   $: logDate = log ? dayjs(log.createdAt).format("MMM DD, YYYY HH:mm:ss") : ""
   $: currentStepData = getCurrentStepData(selectedStep)
@@ -127,6 +134,16 @@
                 <Body size="S" textAlign="center"
                   >No branch information available</Body
                 >
+              </div>
+            {/if}
+          {:else if selectedTab === "Agent"}
+            {#if currentStepData?.outputs}
+              <AgentOutputViewer outputs={currentStepData.outputs} />
+            {:else}
+              <div class="no-data-message">
+                <Body size="S" textAlign="center">
+                  No agent output data available
+                </Body>
               </div>
             {/if}
           {:else if selectedTab === "Issues"}
