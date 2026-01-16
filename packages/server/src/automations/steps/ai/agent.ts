@@ -1,8 +1,10 @@
 import * as automationUtils from "../../automationUtils"
-import {
+import type {
   AgentStepInputs,
   AgentStepOutputs,
+  AgentDecisionLog,
   AutomationStepInputBase,
+  ToolMetadata,
 } from "@budibase/types"
 import { ai } from "@budibase/pro"
 import { helpers } from "@budibase/shared-core"
@@ -22,6 +24,59 @@ import env from "../../../environment"
 
 const llmobs = tracer.llmobs
 
+const buildAgentDecisionLog = ({
+  enabledTools,
+  assistantMessage,
+  modelId,
+  modelName,
+  baseUrl,
+}: {
+  enabledTools?: ToolMetadata[]
+  assistantMessage?: UIMessage
+  modelId?: string
+  modelName?: string
+  baseUrl?: string
+}): AgentDecisionLog => {
+  const toolCallCounts = new Map<string, number>()
+  for (const part of assistantMessage?.parts || []) {
+    const partType =
+      part && typeof part === "object" && "type" in part ? part.type : undefined
+    if (
+      typeof partType === "string" &&
+      (partType.startsWith("tool-") || partType === "dynamic-tool")
+    ) {
+      const toolName =
+        "toolName" in part && typeof part.toolName === "string"
+          ? part.toolName
+          : undefined
+      if (!toolName) {
+        continue
+      }
+      toolCallCounts.set(toolName, (toolCallCounts.get(toolName) || 0) + 1)
+    }
+  }
+
+  const usedTools = Array.from(toolCallCounts.entries()).map(
+    ([name, count]) => ({
+      name,
+      count,
+    })
+  )
+
+  return {
+    enabledTools,
+    usedTools: usedTools.length > 0 ? usedTools : undefined,
+    model:
+      modelId || modelName || baseUrl
+        ? {
+            id: modelId,
+            name: modelName,
+            baseUrl,
+          }
+        : undefined,
+  }
+}
+
 export async function run({
   inputs,
   appId,
@@ -29,6 +84,10 @@ export async function run({
   inputs: AgentStepInputs
 } & AutomationStepInputBase): Promise<AgentStepOutputs> {
   const { agentId, prompt, useStructuredOutput, outputSchema } = inputs
+  let enabledTools: ToolMetadata[] | undefined
+  let modelId: string | undefined
+  let modelName: string | undefined
+  let baseUrl: string | undefined
 
   if (!agentId) {
     return {
@@ -51,6 +110,14 @@ export async function run({
     async agentSpan => {
       try {
         const agentConfig = await sdk.ai.agents.getOrThrow(agentId)
+        const allTools = await sdk.ai.agents.getAvailableToolsMetadata(
+          agentConfig.aiconfig
+        )
+        const enabledToolNames = new Set(agentConfig.enabledTools || [])
+        enabledTools =
+          enabledToolNames.size > 0
+            ? allTools.filter(tool => enabledToolNames.has(tool.name))
+            : allTools
 
         llmobs.annotate(agentSpan, {
           inputData: prompt,
@@ -78,8 +145,13 @@ export async function run({
         const { systemPrompt, tools } =
           await sdk.ai.agents.buildPromptAndTools(agentConfig)
 
-        const { modelId, apiKey, baseUrl, modelName } =
-          await sdk.aiConfigs.getLiteLLMModelConfigOrThrow(agentConfig.aiconfig)
+        const modelConfig = await sdk.aiConfigs.getLiteLLMModelConfigOrThrow(
+          agentConfig.aiconfig
+        )
+        modelId = modelConfig.modelId
+        modelName = modelConfig.modelName
+        baseUrl = modelConfig.baseUrl
+        const { apiKey } = modelConfig
 
         llmobs.annotate(agentSpan, {
           metadata: {
@@ -148,6 +220,13 @@ export async function run({
           usage,
           message: assistantMessage,
           output,
+          agentTrace: buildAgentDecisionLog({
+            enabledTools,
+            assistantMessage,
+            modelId,
+            modelName,
+            baseUrl,
+          }),
         }
       } catch (err: any) {
         const errorMessage = automationUtils.getError(err)
@@ -171,6 +250,12 @@ export async function run({
         return {
           success: false,
           response: errorMessage,
+          agentTrace: buildAgentDecisionLog({
+            enabledTools,
+            modelId,
+            modelName,
+            baseUrl,
+          }),
         }
       }
     }

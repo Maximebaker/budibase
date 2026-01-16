@@ -67,6 +67,10 @@ export const definition: AutomationStepDefinition = {
           description:
             "Structured output from the agent (when output schema is defined)",
         },
+        agentTrace: {
+          type: AutomationIOType.OBJECT,
+          description: "Summary of tools and model decisions made by the agent",
+        },
       },
       required: ["response", "success"],
     },

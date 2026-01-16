@@ -1,5 +1,6 @@
 import { Table } from "@budibase/types"
 import type { UIMessage, LanguageModelUsage } from "ai"
+import type { ToolMetadata } from "../../global/agents"
 import { SortOrder } from "../../../api"
 import {
   SearchFilters,
@@ -275,6 +276,22 @@ export type AgentStepOutputs = {
   message?: UIMessage
   usage?: LanguageModelUsage
   output?: Record<string, any>
+  agentTrace?: AgentDecisionLog
+}
+
+export interface AgentToolCallSummary {
+  name: string
+  count: number
+}
+
+export interface AgentDecisionLog {
+  enabledTools?: ToolMetadata[]
+  usedTools?: AgentToolCallSummary[]
+  model?: {
+    id?: string
+    name?: string
+    baseUrl?: string
+  }
 }
 
 export type LoopV2StepInputs = {
