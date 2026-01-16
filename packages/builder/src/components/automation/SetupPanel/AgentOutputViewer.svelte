@@ -7,6 +7,7 @@
     MarkdownViewer,
     notifications,
   } from "@budibase/bbui"
+  import JSONViewer from "@/components/common/JSONViewer.svelte"
   import ChainOfThought from "./ChainOfThought.svelte"
   import ChainOfThoughtModal from "./ChainOfThoughtModal.svelte"
   import type { AgentStepOutputs } from "@budibase/types"
@@ -39,6 +40,7 @@
   let message = $derived(outputs.message)
   let response = $derived(outputs.response)
   let usage = $derived(outputs.usage)
+  let agentTrace = $derived(outputs.agentTrace)
 
   let reasoningParts = $derived(message?.parts.filter(isReasoningUIPart))
   let toolParts = $derived(message?.parts.filter(isToolUIPart))
@@ -141,6 +143,12 @@
       <div class="steps-section">
         <ChainOfThought steps={chainSteps || []} simple={true} />
       </div>
+    </DetailSummary>
+  {/if}
+
+  {#if agentTrace}
+    <DetailSummary name="Agent decisions" padded>
+      <JSONViewer value={agentTrace} />
     </DetailSummary>
   {/if}
 </div>
