@@ -68,7 +68,6 @@ const buildCronAutomation = (cronJobId?: string): Automation => ({
       cronJobId,
     },
   },
-  type: "automation",
 })
 
 const buildEmailAutomation = (
@@ -94,7 +93,6 @@ const buildEmailAutomation = (
       cronJobId,
     },
   },
-  type: "automation",
 })
 
 const validEmailInputs: EmailTriggerInputs = {

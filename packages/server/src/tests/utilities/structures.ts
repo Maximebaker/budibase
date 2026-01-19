@@ -213,9 +213,6 @@ export function rowActionAutomation() {
 export function basicAutomation(opts?: DeepPartial<Automation>): Automation {
   const baseAutomation: Automation = {
     name: "My Automation",
-    screenId: "kasdkfldsafkl",
-    live: true,
-    uiTree: {},
     definition: {
       trigger: {
         stepId: AutomationTriggerStepId.APP,
@@ -237,7 +234,6 @@ export function basicAutomation(opts?: DeepPartial<Automation>): Automation {
       },
       steps: [],
     },
-    type: "automation",
     appId: "appId",
   }
   return merge(baseAutomation, opts)
@@ -307,7 +303,6 @@ export function collectAutomation(opts?: DeepPartial<Automation>): Automation {
   const baseAutomation: Automation = {
     appId: "appId",
     name: "looping",
-    type: "automation",
     definition: {
       steps: [
         {
@@ -361,7 +356,6 @@ export function collectAutomation(opts?: DeepPartial<Automation>): Automation {
 export function filterAutomation(opts?: DeepPartial<Automation>): Automation {
   const automation: Automation = {
     name: "looping",
-    type: "automation",
     appId: "appId",
     definition: {
       steps: [
@@ -407,7 +401,6 @@ export function updateRowAutomationWithFilters(
 ): Automation {
   return {
     name: "updateRowWithFilters",
-    type: "automation",
     appId,
     definition: {
       steps: [

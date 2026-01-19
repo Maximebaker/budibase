@@ -38,10 +38,6 @@ function cleanAutomationInputs(automation: Automation) {
   let steps = automation.definition.steps
   let trigger = automation.definition.trigger
   let allSteps = [...steps, trigger]
-  // live is not a property used anymore
-  if (automation.live != null) {
-    delete automation.live
-  }
   for (let step of allSteps) {
     if (step == null) {
       continue
@@ -120,7 +116,6 @@ export async function create(automation: Automation) {
     automation._id = generateAutomationID()
   }
 
-  automation.type = "automation"
   automation = hydrateAutomationSecrets(automation)
   automation = cleanAutomationInputs(automation)
   automation = await checkForWebhooks({
@@ -311,13 +306,8 @@ function trimUnexpectedObjectFields<T extends Automation>(automation: T): T {
     _id: automation._id,
     _rev: automation._rev,
     definition: automation.definition,
-    screenId: automation.screenId,
-    uiTree: automation.uiTree,
     appId: automation.appId,
-    live: automation.live,
     name: automation.name,
-    internal: automation.internal,
-    type: automation.type,
     disabled: automation.disabled,
     testData: automation.testData,
     createdAt: automation.createdAt,
