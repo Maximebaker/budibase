@@ -26,6 +26,18 @@ if (automationsEnabled()) {
   Runner = new Thread(ThreadType.AUTOMATION)
 }
 
+const DATABASE_NOT_FOUND_REASON = "Database does not exist."
+
+function isWorkspaceDatabaseMissing(err: any) {
+  if (!err || typeof err !== "object") {
+    return false
+  }
+  return (
+    err.reason === DATABASE_NOT_FOUND_REASON ||
+    err.message?.includes(DATABASE_NOT_FOUND_REASON) === true
+  )
+}
+
 function loggingArgs(job: AutomationJob) {
   return [
     {
@@ -114,6 +126,9 @@ export async function processEvent(job: AutomationJob) {
       } catch (err) {
         span.addTags({ error: true })
         console.error(`automation was unable to run`, err, ...loggingArgs(job))
+        if (job.opts.repeat && job.id && isWorkspaceDatabaseMissing(err)) {
+          await disableCronById(job.id)
+        }
         return { err }
       }
     }
