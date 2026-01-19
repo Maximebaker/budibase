@@ -110,8 +110,8 @@ describe.each([true, false])("migrationsProcessor", fromProd => {
         id: generateMigrationId(),
         func: async () => {
           expect(context.getCurrentContext()?.isMigrating).toBe(true)
-          migrationCallPerApp[context.getWorkspaceId()!] ??= 0
-          migrationCallPerApp[context.getWorkspaceId()!]++
+          migrationCallPerApp[context.getOrThrowWorkspaceId()] ??= 0
+          migrationCallPerApp[context.getOrThrowWorkspaceId()]++
         },
       })
     )

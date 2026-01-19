@@ -314,7 +314,7 @@ export const publishWorkspaceInternal = async (
     }
   }
 
-  const appId = context.getWorkspaceId()!
+  const appId = context.getOrThrowWorkspaceId()
 
   let migrationResult: { app: Workspace; prodWorkspaceId: string }
   try {

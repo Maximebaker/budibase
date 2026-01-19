@@ -337,7 +337,7 @@ export async function publish(
     )
   }
 
-  const appId = context.getWorkspaceId()!
+  const appId = context.getOrThrowWorkspaceId()
   const prodWorkspaceId = dbCore.getProdWorkspaceID(appId)
   const prodPublished =
     await sdk.workspaces.isWorkspacePublished(prodWorkspaceId)
