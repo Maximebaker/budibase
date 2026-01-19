@@ -306,7 +306,6 @@ function trimUnexpectedObjectFields<T extends Automation>(automation: T): T {
     _id: automation._id,
     _rev: automation._rev,
     definition: automation.definition,
-    appId: automation.appId,
     name: automation.name,
     disabled: automation.disabled,
     testData: automation.testData,

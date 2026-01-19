@@ -59,7 +59,6 @@ export async function create(
   ctx: UserCtx<CreateAutomationRequest, CreateAutomationResponse>
 ) {
   let automation = ctx.request.body
-  automation.appId = ctx.appId
 
   // call through to update if already exists
   if (automation._id && automation._rev) {
@@ -100,7 +99,6 @@ export async function update(
   ctx: UserCtx<UpdateAutomationRequest, UpdateAutomationResponse>
 ) {
   let automation = ctx.request.body
-  automation.appId = ctx.appId
 
   // Call through to create if it doesn't exist
   if (!automation._id || !automation._rev) {
@@ -208,6 +206,7 @@ export async function trigger(
           user: sdk.users.getUserContextBindings(ctx.user),
           timeout:
             ctx.request.body.timeout * 1000 || env.AUTOMATION_THREAD_TIMEOUT,
+          appId: context.getOrThrowWorkspaceId(),
         },
         { getResponses: true }
       )

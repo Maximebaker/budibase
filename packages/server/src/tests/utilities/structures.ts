@@ -234,7 +234,6 @@ export function basicAutomation(opts?: DeepPartial<Automation>): Automation {
       },
       steps: [],
     },
-    appId: "appId",
   }
   return merge(baseAutomation, opts)
 }
@@ -301,7 +300,6 @@ export function loopAutomation(
 
 export function collectAutomation(opts?: DeepPartial<Automation>): Automation {
   const baseAutomation: Automation = {
-    appId: "appId",
     name: "looping",
     definition: {
       steps: [
@@ -356,7 +354,6 @@ export function collectAutomation(opts?: DeepPartial<Automation>): Automation {
 export function filterAutomation(opts?: DeepPartial<Automation>): Automation {
   const automation: Automation = {
     name: "looping",
-    appId: "appId",
     definition: {
       steps: [
         {
@@ -395,13 +392,9 @@ export function filterAutomation(opts?: DeepPartial<Automation>): Automation {
   return merge(automation, opts)
 }
 
-export function updateRowAutomationWithFilters(
-  appId: string,
-  tableId: string
-): Automation {
+export function updateRowAutomationWithFilters(tableId: string): Automation {
   return {
     name: "updateRowWithFilters",
-    appId,
     definition: {
       steps: [
         {

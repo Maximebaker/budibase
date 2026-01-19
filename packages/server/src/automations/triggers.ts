@@ -179,7 +179,7 @@ export function isAutomationResults(
 interface AutomationTriggerParams {
   fields?: Record<string, any>
   timeout?: number
-  appId?: string
+  appId: string
   user?: UserBindings
   table?: Table
 }
@@ -238,7 +238,10 @@ export async function externalTrigger(
     }
   }
 
-  const data: AutomationData = { automation, event: params }
+  const data: AutomationData = {
+    automation,
+    event: params,
+  }
 
   const shouldTrigger = await checkTriggerFilters(automation, {
     row: data.event?.row ?? {},
@@ -258,7 +261,6 @@ export async function externalTrigger(
   if (getResponses) {
     data.event = {
       ...data.event,
-      appId: context.getWorkspaceId(),
       automation,
     }
     return executeInThread({ data } as AutomationJob, { onProgress })
@@ -285,7 +287,7 @@ export async function rebootTrigger() {
       let rebootEvents = []
       for (let automation of automations) {
         if (utils.isRebootTrigger(automation)) {
-          const job = {
+          const job: AutomationData = {
             automation,
             event: {
               appId: prodId,

@@ -16,7 +16,7 @@ export const automationQueue = new queue.BudibaseQueue<AutomationData>(
       return {
         "automation.id": job.automation._id,
         "automation.name": job.automation.name,
-        "automation.appId": job.automation.appId,
+        "automation.appId": job.event.appId,
         "automation.createdAt": job.automation.createdAt,
         "automation.trigger": job.automation.definition.trigger.stepId,
       }

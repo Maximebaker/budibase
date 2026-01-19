@@ -378,7 +378,6 @@ export function automationValidator(existing = false) {
       _id: existing ? Joi.string().required() : OPTIONAL_STRING,
       _rev: existing ? Joi.string().required() : OPTIONAL_STRING,
       name: Joi.string().required(),
-      type: Joi.string().valid("automation").required(),
       definition: Joi.object({
         steps: Joi.array()
           .required()

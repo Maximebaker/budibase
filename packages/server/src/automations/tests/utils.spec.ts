@@ -51,7 +51,6 @@ const mockNewId = coreUtils.newid as MockedFunction<typeof coreUtils.newid>
 const buildCronAutomation = (cronJobId?: string): Automation => ({
   _id: "automation_1",
   _rev: "1-abc",
-  appId: "app_dev_123",
   name: "Cron automation",
   definition: {
     steps: [],
@@ -76,7 +75,6 @@ const buildEmailAutomation = (
 ): Automation => ({
   _id: "automation_2",
   _rev: "1-abc",
-  appId: "app_dev_123",
   name: "Email automation",
   definition: {
     steps: [],

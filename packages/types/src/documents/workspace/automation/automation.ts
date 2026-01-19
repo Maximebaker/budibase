@@ -146,7 +146,6 @@ export interface Automation extends Document {
     // stepNames is used to lookup step names from their correspnding step ID.
     stepNames?: Record<string, string>
   }
-  appId: string
   name: string
   disabled?: boolean
   layoutDirection?: LayoutDirection

@@ -7,7 +7,7 @@ import {
 import { Job } from "bull"
 
 export interface AutomationDataEvent {
-  appId?: string
+  appId: string
   metadata?: AutomationMetadata
   automation?: Automation
   timeout?: number

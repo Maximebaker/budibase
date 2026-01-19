@@ -278,7 +278,6 @@ describe("/automations", () => {
           tableId: table._id,
         },
       }
-      automation.appId = config.getDevWorkspaceId()
       automation = await config.createAutomation(automation)
       await setup.delay(500)
       const res = await testAutomation(config, automation, {
@@ -731,7 +730,6 @@ describe("/automations", () => {
       "$description",
       async ({ filters, row, oldRow, expectToRun }) => {
         let req = updateRowAutomationWithFilters(
-          config.getDevWorkspaceId(),
           table._id!
         )
         req.definition.trigger.inputs = {

@@ -702,9 +702,7 @@ describe("/api/resources/usage", () => {
         apps: [app.app],
         screens: app.screens,
         tables: [table],
-        automations: [
-          { ...rowActionAutomation, appId: newWorkspace.appId, disabled: true },
-        ],
+        automations: [{ ...rowActionAutomation, disabled: true }],
         rowActions: [
           {
             tableId: table._id!,
@@ -1004,9 +1002,7 @@ describe("/api/resources/usage", () => {
       await duplicateResources(resourcesToCopy, newWorkspace.appId)
 
       await validateWorkspace(newWorkspace.appId, {
-        automations: [
-          { ...automation, disabled: true, appId: newWorkspace.appId },
-        ],
+        automations: [{ ...automation, disabled: true }],
       })
     })
 

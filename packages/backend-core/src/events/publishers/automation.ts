@@ -1,20 +1,21 @@
-import { publishEvent } from "../events"
 import {
   Automation,
-  Event,
-  AutomationStep,
   AutomationCreatedEvent,
   AutomationDeletedEvent,
-  AutomationTestedEvent,
+  AutomationStep,
   AutomationStepCreatedEvent,
   AutomationStepDeletedEvent,
+  AutomationTestedEvent,
   AutomationTriggerUpdatedEvent,
   AutomationsRunEvent,
+  Event,
 } from "@budibase/types"
+import * as context from "../../context"
+import { publishEvent } from "../events"
 
 async function created(automation: Automation, timestamp?: string | number) {
   const properties: AutomationCreatedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,
@@ -27,7 +28,7 @@ async function created(automation: Automation, timestamp?: string | number) {
 
 async function triggerUpdated(automation: Automation) {
   const properties: AutomationTriggerUpdatedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,
@@ -37,7 +38,7 @@ async function triggerUpdated(automation: Automation) {
 
 async function deleted(automation: Automation) {
   const properties: AutomationDeletedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,
@@ -50,7 +51,7 @@ async function deleted(automation: Automation) {
 
 async function tested(automation: Automation) {
   const properties: AutomationTestedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,
@@ -71,7 +72,7 @@ async function stepCreated(
   timestamp?: string | number
 ) {
   const properties: AutomationStepCreatedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,
@@ -86,7 +87,7 @@ async function stepCreated(
 
 async function stepDeleted(automation: Automation, step: AutomationStep) {
   const properties: AutomationStepDeletedEvent = {
-    appId: automation.appId,
+    appId: context.getOrThrowWorkspaceId(),
     automationId: automation._id as string,
     triggerId: automation.definition?.trigger?.id,
     triggerType: automation.definition?.trigger?.stepId,

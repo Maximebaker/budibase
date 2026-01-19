@@ -40,7 +40,11 @@ export async function run({
 
       const response = await triggers.externalTrigger(
         automation,
-        { fields: { ...fieldParams }, timeout },
+        {
+          fields: { ...fieldParams },
+          timeout,
+          appId: context.getOrThrowWorkspaceId(),
+        },
         { getResponses: true }
       )
 

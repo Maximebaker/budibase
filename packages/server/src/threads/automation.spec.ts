@@ -33,14 +33,13 @@ describe("automation thread", () => {
   })
 
   it("executes the latest automation definition for cron jobs", async () => {
-    const prodAppId = config.getProdWorkspaceId()
+    const prodAppId = config.getProdWorkspaceId()!
 
     const initialAutomation = await context.doInWorkspaceContext(
       prodAppId,
       async () =>
         sdk.automations.create(
           basicAutomation({
-            appId: prodAppId,
             definition: {
               trigger: {
                 id: "cron-trigger",
@@ -107,7 +106,7 @@ describe("automation thread", () => {
 
     const initialAutomation = await context.doInWorkspaceContext(
       prodAppId,
-      async () => sdk.automations.create(basicAutomation({ appId: prodAppId }))
+      async () => sdk.automations.create(basicAutomation())
     )
 
     const { id: _ignored, ...serverLogDefinition } =
@@ -184,7 +183,6 @@ describe("automation thread", () => {
     const job = {
       data: {
         automation: basicAutomation({
-          appId,
           definition: {
             trigger: {
               stepId: AutomationTriggerStepId.APP,

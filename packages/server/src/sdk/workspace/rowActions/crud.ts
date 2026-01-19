@@ -61,7 +61,6 @@ export async function create(tableId: string, rowAction: { name: string }) {
 
   const automation = await automations.create({
     name: action.name,
-    appId,
     definition: {
       trigger: {
         id: "trigger",
@@ -262,7 +261,7 @@ export async function run(
         table,
       },
       user,
-      appId: context.getWorkspaceId(),
+      appId: context.getOrThrowWorkspaceId(),
     },
     { getResponses: true }
   )

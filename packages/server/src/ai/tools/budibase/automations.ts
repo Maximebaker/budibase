@@ -95,6 +95,7 @@ const AUTOMATION_TOOLS: BudibaseToolDefinition[] = [
           {
             fields: parsedData || {},
             timeout: timeout ? timeout * 1000 : env.AUTOMATION_THREAD_TIMEOUT,
+            appId: context.getOrThrowWorkspaceId(),
           },
           { getResponses: true }
         )

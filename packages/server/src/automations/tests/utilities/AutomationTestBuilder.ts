@@ -223,7 +223,6 @@ class StepBuilder<
         stepNames: this.stepNames,
       },
       disabled: opts?.disabled,
-      appId: this.config.getDevWorkspaceId(),
     }
   }
 

@@ -643,9 +643,6 @@ export async function duplicateResourcesToWorkspace(
         if (isAutomation(sanitizedDoc) || isWorkspaceApp(sanitizedDoc)) {
           sanitizedDoc.disabled = true
         }
-        if (isAutomation(sanitizedDoc)) {
-          sanitizedDoc.appId = toWorkspace
-        }
         return sanitizedDoc
       })
     )
