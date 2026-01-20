@@ -1,18 +1,57 @@
 <script lang="ts">
   import Panel from "@/components/design/Panel.svelte"
-  import { Body, Toggle } from "@budibase/bbui"
+  import { Body } from "@budibase/bbui"
+  import type { Agent } from "@budibase/types"
+  import AgentList from "./AgentList.svelte"
+  import AgentSettingsModal from "./AgentSettingsModal.svelte"
 
-  type NamedAgent = {
-    _id?: string
-    name?: string
+  type EnabledAgent = {
+    agentId: string
+    default?: boolean
   }
 
-  export let namedAgents: NamedAgent[] = []
+  type AgentListItem = Agent & {
+    agentId: string
+    default?: boolean
+  }
+
+  export let namedAgents: Agent[] = []
+  export let enabledAgents: EnabledAgent[] = []
   export let isAgentAvailable: (_agentId: string) => boolean
   export let handleAvailabilityToggle: (
     _agentId: string,
     _enabled: boolean
   ) => void
+  export let handleDefaultToggle: (_agentId: string) => void
+
+  let selectedAgentId: string | undefined
+  let selectedAgent: AgentListItem | undefined
+  let isModalOpen = false
+
+  $: selectedAgent = agentList.find(agent => agent.agentId === selectedAgentId)
+
+  $: agentList = namedAgents
+    .filter(agent => agent._id)
+    .map(agent => ({
+      ...agent,
+      agentId: agent._id!,
+      default: enabledAgents.find(enabled => enabled.agentId === agent._id)
+        ?.default,
+    }))
+
+  $: enabledAgentList = agentList.filter(agent =>
+    isAgentAvailable(agent.agentId)
+  )
+  $: resolvedDefaultAgent =
+    enabledAgentList.find(agent => agent.default) || enabledAgentList[0]
+  $: otherAgents = agentList.filter(
+    agent => agent.agentId !== resolvedDefaultAgent?.agentId
+  )
+
+  const openAgentSettings = (agent: AgentListItem) => {
+    selectedAgentId = agent.agentId
+    isModalOpen = true
+  }
 </script>
 
 <Panel customWidth={260} borderRight noHeaderBorder>
@@ -28,28 +67,27 @@
       default agent.
     </Body>
 
-    {#if namedAgents.length}
-      {#each namedAgents as agent (agent._id)}
-        <div class="settings-agent">
-          <div class="settings-agent-info">
-            <Body size="S">{agent.name}</Body>
-          </div>
-          {#if agent._id}
-            <Toggle
-              value={isAgentAvailable(agent._id)}
-              on:change={event =>
-                handleAvailabilityToggle(agent._id!, event.detail)}
-            />
-          {/if}
-        </div>
-      {/each}
-    {:else}
-      <Body size="S" color="var(--spectrum-global-color-gray-500)">
-        No agents found
-      </Body>
-    {/if}
+    <AgentList
+      {resolvedDefaultAgent}
+      {otherAgents}
+      {isAgentAvailable}
+      onToggleEnabled={handleAvailabilityToggle}
+      onOpenSettings={openAgentSettings}
+    />
   </div>
 </Panel>
+
+<AgentSettingsModal
+  open={isModalOpen}
+  {selectedAgent}
+  defaultAgentId={resolvedDefaultAgent?.agentId}
+  {isAgentAvailable}
+  onSetDefault={handleDefaultToggle}
+  onClose={() => {
+    isModalOpen = false
+    selectedAgentId = undefined
+  }}
+/>
 
 <style>
   .settings-header {
@@ -62,18 +100,5 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-s);
-  }
-
-  .settings-agent {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-s);
-  }
-
-  .settings-agent-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xxs);
   }
 </style>
