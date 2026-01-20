@@ -42,6 +42,38 @@
   let usage = $derived(outputs.usage)
   let agentTrace = $derived(outputs.agentTrace)
 
+  const buildUsedTools = (message?: Props["outputs"]["message"]) => {
+    const toolCounts = new Map<string, number>()
+    for (const part of message?.parts || []) {
+      if (!isToolUIPart(part)) {
+        continue
+      }
+      const toolName = getToolName(part)
+      if (!toolName) {
+        continue
+      }
+      toolCounts.set(toolName, (toolCounts.get(toolName) || 0) + 1)
+    }
+
+    const usedTools = Array.from(toolCounts.entries()).map(([name, count]) => ({
+      name,
+      count,
+    }))
+    return usedTools.length > 0 ? usedTools : undefined
+  }
+
+  let usedTools = $derived(buildUsedTools(message))
+  let agentTraceDisplay = $derived.by(() => {
+    if (!agentTrace && !usedTools) {
+      return undefined
+    }
+    const base = agentTrace || {}
+    return {
+      ...base,
+      usedTools: base.usedTools || usedTools,
+    }
+  })
+
   let reasoningParts = $derived(message?.parts.filter(isReasoningUIPart))
   let toolParts = $derived(message?.parts.filter(isToolUIPart))
 
@@ -146,9 +178,9 @@
     </DetailSummary>
   {/if}
 
-  {#if agentTrace}
+  {#if agentTraceDisplay}
     <DetailSummary name="Agent decisions" padded>
-      <JSONViewer value={agentTrace} />
+      <JSONViewer value={agentTraceDisplay} />
     </DetailSummary>
   {/if}
 </div>
